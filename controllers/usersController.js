@@ -40,17 +40,9 @@ async function login(req, res) {
   }
 }
 
-//* Checktoken
-function checkToken(req, res) {
-  console.log("req.user", req.user);
-  // that Date object we created for fun
-  res.json(req.exp);
-}
-
 module.exports = {
   index,
   create,
   login,
-  checkToken,
 };
 //? added 'createJWT' here, in order to import to 'userprefersController' to use...
