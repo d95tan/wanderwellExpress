@@ -45,4 +45,3 @@ module.exports = {
   create,
   login,
 };
-//? added 'createJWT' here, in order to import to 'userprefersController' to use...

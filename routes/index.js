@@ -4,9 +4,7 @@ var db = require("../db/index.js")
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-  const result = await db.query("SELECT * FROM users")
-  res.json(result);
-  // res.json("I'm here");
+  res.json({msg: "Welcome to the backend"});
 });
 
 module.exports = router;
