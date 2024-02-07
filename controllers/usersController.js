@@ -12,8 +12,8 @@ const create = async (req, res) => {
     const data = req.body;
     const password = await userService.hashPassword(data.password);
     const user = await db.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-      [data.email, password]
+      "INSERT INTO users (email, name, password) VALUES ($1, $2, $3) RETURNING *",
+      [data.email, data.name, password]
     );
     const token = userService.createJWT(
       userService.transformUser(user.rows[0])
