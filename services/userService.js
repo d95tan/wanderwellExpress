@@ -20,7 +20,7 @@ const transformUser = (user) => {
   return null;
 };
 
-function createJWT(user, expiresIn = "24h") {
+function createJWT(user, expiresIn = "7d") {
   return jwt.sign(
     // data payload
     { user },
