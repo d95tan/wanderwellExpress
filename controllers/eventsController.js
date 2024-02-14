@@ -38,8 +38,6 @@ const createEvent = async (req, res) => {
   try {
     const { name, type, description, start, end } = req.body;
     console.log(name, type, description, start, end);
-    startD = new Date()
-    endD = new Date()
     const event = await db.query(
       'INSERT INTO events (tripid, name, type, description, start, "end") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [tripId, name, type, description, start, end]
