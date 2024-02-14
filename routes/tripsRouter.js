@@ -15,6 +15,11 @@ router.post(
   eventsController.validateUser,
   eventsController.createEvent
 );
+router.put(
+  "/:tripId/:eventId",
+  eventsController.validateUser,
+  eventsController.editEvent
+);
 router.delete(
   "/:tripId/:eventId",
   eventsController.validateUser,

@@ -48,19 +48,41 @@ const createEvent = async (req, res) => {
   }
 };
 
-const deleteEvent = async (req, res) => {
-  const { tripId,eventId } = req.params;
+const editEvent = async (req, res) => {
+  const { tripId, eventId } = req.params;
   try {
-    const deletedEvent = await db.query("DELETE FROM events WHERE id=$1 AND tripid=$2 RETURNING *", [eventId, tripId]);
-    res.json(deletedEvent.rows[0])
+    const { name, type, description, start, end, id } = req.body;
+    if (id !== parseInt(eventId)) {
+      res.status(403).json({ error: "Event ID doesn't match" });
+      return;
+    }
+    const updatedEvent = await db.query(
+      'UPDATE events SET name=$1, type=$2, description=$3, start=$4, "end"=$5 WHERE id=$6 AND tripid=$7 RETURNING *',
+      [name, type, description, start, end, id, tripId]
+    );
+    res.json(updatedEvent.rows[0]);
   } catch (e) {
-    res.status(500).json({msg: "Something went wrong", error: e})
+    res.status(500).json({ msg: "Something went wrong", error: e });
   }
-} 
+};
+
+const deleteEvent = async (req, res) => {
+  const { tripId, eventId } = req.params;
+  try {
+    const deletedEvent = await db.query(
+      "DELETE FROM events WHERE id=$1 AND tripid=$2 RETURNING *",
+      [eventId, tripId]
+    );
+    res.json(deletedEvent.rows[0]);
+  } catch (e) {
+    res.status(500).json({ msg: "Something went wrong", error: e });
+  }
+};
 
 module.exports = {
   validateUser,
   index,
   createEvent,
-  deleteEvent
+  editEvent,
+  deleteEvent,
 };
