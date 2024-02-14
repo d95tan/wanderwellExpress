@@ -48,8 +48,19 @@ const createEvent = async (req, res) => {
   }
 };
 
+const deleteEvent = async (req, res) => {
+  const { tripId,eventId } = req.params;
+  try {
+    const deletedEvent = await db.query("DELETE FROM events WHERE id=$1 AND tripid=$2 RETURNING *", [eventId, tripId]);
+    res.json(deletedEvent.rows[0])
+  } catch (e) {
+    res.status(500).json({msg: "Something went wrong", error: e})
+  }
+} 
+
 module.exports = {
   validateUser,
   index,
   createEvent,
+  deleteEvent
 };

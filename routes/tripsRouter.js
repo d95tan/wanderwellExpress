@@ -15,5 +15,10 @@ router.post(
   eventsController.validateUser,
   eventsController.createEvent
 );
+router.delete(
+  "/:tripId/:eventId",
+  eventsController.validateUser,
+  eventsController.deleteEvent
+);
 
 module.exports = router;

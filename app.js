@@ -1,24 +1,24 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/usersRouter');
-var tripsRouter = require('./routes/tripsRouter')
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/usersRouter");
+var tripsRouter = require("./routes/tripsRouter");
 
 var app = express();
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('./config/checkToken'));
+app.use(require("./config/checkToken"));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/trips', tripsRouter)
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+app.use("/trips", tripsRouter);
 
 module.exports = app;
