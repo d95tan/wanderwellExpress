@@ -16,7 +16,7 @@ const index = async (req, res) => {
       } else {
         return -1;
       }
-    })
+    });
     res.json(trips.rows);
   } catch (e) {
     res.status(500).json({ msg: "Something went wrong", error: e });
@@ -42,7 +42,79 @@ const createTrip = async (req, res) => {
   }
 };
 
+const indexCollaborators = async (req, res) => {
+  const { tripId } = req.params;
+  try {
+    const collaborators = await db.query(
+      "SELECT users.email FROM usertrips JOIN users ON usertrips.userid = users.id WHERE usertrips.tripid=$1",
+      [tripId]
+    );
+    res.json(collaborators.rows);
+  } catch (e) {
+    res.status(500).json({ msg: "Something went wrong", error: e });
+  }
+};
+
+const addCollaborator = async (req, res) => {
+  const { tripId } = req.params;
+  const { email } = req.body;
+  if (req.user.isPremium) {
+    try {
+      const user = await db.query("SELECT id FROM users WHERE email = $1", [
+        email,
+      ]);
+      const userId = user.rows[0].id;
+      const collaborator = await db.query(
+        "INSERT INTO usertrips (userid, tripid) VALUES ($1, $2) RETURNING *",
+        [userId, tripId]
+      );
+      if (collaborator.rows.length > 0) {
+        res.json({ email });
+      } else {
+        res.status(400).json({ msg: "Something went wrong" });
+      }
+    } catch (e) {
+      res.status(500).json({ msg: "Something went wrong", error: e });
+    }
+  } else {
+    res
+      .status(403)
+      .json({ msg: "This feature is only available for premium users" });
+  }
+};
+
+const deleteCollaborator = async (req, res) => {
+  const { tripId } = req.params;
+  const { email } = req.query;
+  if (req.user.isPremium) {
+    try {
+      const user = await db.query("SELECT id FROM users WHERE email = $1", [
+        email,
+      ]);
+      const userId = user.rows[0].id;
+      const deleted = await db.query(
+        "DELETE FROM usertrips WHERE userid = $1 AND tripid = $2 RETURNING *",
+        [userId, tripId]
+      );
+      if (deleted.rows.length > 0) {
+        res.json({ email });
+      } else {
+        res.status(400).json({ msg: "Something went wrong" });
+      } 
+    } catch (e) {
+      res.status(500).json({ msg: "Something went wrong", error: e });
+    }
+  } else {
+    res
+      .status(403)
+      .json({ msg: "This feature is only available for premium users" });
+  }
+};
+
 module.exports = {
   index,
   createTrip,
+  indexCollaborators,
+  addCollaborator,
+  deleteCollaborator,
 };

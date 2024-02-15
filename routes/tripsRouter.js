@@ -8,6 +8,11 @@ const eventsController = require("../controllers/eventsController");
 router.get("/", tripsController.index);
 router.post("/", tripsController.createTrip);
 
+//* Collaborators
+router.get("/:tripId/collaborators", eventsController.validateUser, tripsController.indexCollaborators)
+router.post("/:tripId/collaborators", eventsController.validateUser, tripsController.addCollaborator)
+router.delete("/:tripId/collaborators", eventsController.validateUser, tripsController.deleteCollaborator)
+
 //* Events
 router.get("/:tripId", eventsController.validateUser, eventsController.index);
 router.post(
@@ -25,5 +30,6 @@ router.delete(
   eventsController.validateUser,
   eventsController.deleteEvent
 );
+
 
 module.exports = router;
